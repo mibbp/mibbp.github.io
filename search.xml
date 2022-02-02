@@ -349,4 +349,89 @@
 <h3 id="1-规划与分析："><a href="#1-规划与分析：" class="headerlink" title="1.规划与分析："></a>1.规划与分析：</h3><p>是DBAS生命周期第一步，从技术，操作，经济三个方面去分析</p>
 ]]></content>
   </entry>
+  <entry>
+    <title>KMP算法的理解分析及优化</title>
+    <url>/2022/02/02/Linux/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h1 id="Linux"><a href="#Linux" class="headerlink" title="Linux"></a>Linux</h1><h2 id="常用文件管理命令"><a href="#常用文件管理命令" class="headerlink" title="常用文件管理命令"></a>常用文件管理命令</h2><p>(1) ctrl c: 取消命令，并且换行<br>(2) ctrl u: 清空本行命令<br>(3) tab键：可以补全命令和文件名，如果补全不了快速按两下tab键，可以显示备选选项<br>(4) ls: 列出当前目录下所有文件，蓝色的是文件夹，白色的是普通文件，绿色的是可执行文件<br>(5) pwd: 显示当前路径<br>(6) cd XXX: 进入XXX目录下, cd .. 返回上层目录<br>(7) cp XXX YYY: 将XXX文件复制成YYY，XXX和YYY可以是一个路径，比如../dir_c/a.txt，表示上层目录下的dir_c文件夹下的文件a.txt<br>(8) mkdir XXX: 创建目录XXX<br>(9) rm XXX: 删除普通文件;  rm XXX -r: 删除文件夹<br>(10) mv XXX YYY: 将XXX文件移动到YYY，和cp命令一样，XXX和YYY可以是一个路径；重命名也是用这个命令<br>(11) touch XXX: 创建一个文件<br>(12) cat XXX: 展示文件XXX中的内容<br>(13) 复制文本<br>    windows/Linux下：Ctrl + insert，Mac下：command + c<br>(14) 粘贴文本<br>    windows/Linux下：Shift + insert，Mac下：command + v</p>
+<h2 id="tmux"><a href="#tmux" class="headerlink" title="tmux"></a>tmux</h2><p>功能：<br>    (1) 分屏。<br>    (2) 允许断开Terminal连接后，继续运行进程。<br>结构：<br>    一个tmux可以包含多个session，一个session可以包含多个window，一个window可以包含多个pane。<br>    实例：<br>        tmux:<br>            session 0:<br>                window 0:<br>                    pane 0<br>                    pane 1<br>                    pane 2<br>                    …<br>                window 1<br>                window 2<br>                …<br>            session 1<br>            session 2<br>            …<br>操作：<br>    (1) tmux：新建一个session，其中包含一个window，window中包含一个pane，pane里打开了一个shell对话框。<br>    (2) 按下Ctrl + a后手指松开，然后按%：将当前pane左右平分成两个pane。<br>    (3) 按下Ctrl + a后手指松开，然后按”（注意是双引号”）：将当前pane上下平分成两个pane。<br>    (4) Ctrl + d：关闭当前pane；如果当前window的所有pane均已关闭，则自动关闭window；如果当前session的所有window均已关闭，则自动关闭session。<br>    (5) 鼠标点击可以选pane。<br>    (6) 按下ctrl + a后手指松开，然后按方向键：选择相邻的pane。<br>    (7) 鼠标拖动pane之间的分割线，可以调整分割线的位置。<br>    (8) 按住ctrl + a的同时按方向键，可以调整pane之间分割线的位置。<br>    (9) 按下ctrl + a后手指松开，然后按z：将当前pane全屏/取消全屏。<br>    (10) 按下ctrl + a后手指松开，然后按d：挂起当前session。<br>    (11) tmux a：打开之前挂起的session。<br>    (12) 按下ctrl + a后手指松开，然后按s：选择其它session。<br>        方向键 —— 上：选择上一项 session/window/pane<br>        方向键 —— 下：选择下一项 session/window/pane<br>        方向键 —— 右：展开当前项 session/window<br>        方向键 —— 左：闭合当前项 session/window<br>    (13) 按下Ctrl + a后手指松开，然后按c：在当前session中创建一个新的window。<br>    (14) 按下Ctrl + a后手指松开，然后按w：选择其他window，操作方法与(12)完全相同。<br>    (15) 按下Ctrl + a后手指松开，然后按PageUp：翻阅当前pane内的内容。<br>    (16) 鼠标滚轮：翻阅当前pane内的内容。<br>    (17) 在tmux中选中文本时，需要按住shift键。（仅支持Windows和Linux，不支持Mac，不过该操作并不是必须的，因此影响不大）<br>    (18) tmux中复制/粘贴文本的通用方式：<br>        (1) 按下Ctrl + a后松开手指，然后按[<br>        (2) 用鼠标选中文本，被选中的文本会被自动复制到tmux的剪贴板<br>        (3) 按下Ctrl + a后松开手指，然后按]，会将剪贴板中的内容粘贴到光标处</p>
+<h2 id="vim"><a href="#vim" class="headerlink" title="vim"></a>vim</h2><p>功能：<br>    (1) 命令行模式下的文本编辑器。<br>    (2) 根据文件扩展名自动判别编程语言。支持代码缩进、代码高亮等功能。<br>    (3) 使用方式：vim filename<br>        如果已有该文件，则打开它。<br>        如果没有该文件，则打开个一个新的文件，并命名为filename<br>模式：<br>    (1) 一般命令模式<br>        默认模式。命令输入方式：类似于打游戏放技能，按不同字符，即可进行不同操作。可以复制、粘贴、删除文本等。<br>    (2) 编辑模式<br>        在一般命令模式里按下i，会进入编辑模式。<br>        按下ESC会退出编辑模式，返回到一般命令模式。<br>    (3) 命令行模式<br>        在一般命令模式里按下:/?三个字母中的任意一个，会进入命令行模式。命令行在最下面。<br>        可以查找、替换、保存、退出、配置编辑器等。<br>操作：<br>    (1) i：进入编辑模式<br>    (2) ESC：进入一般命令模式<br>    (3) h 或 左箭头键：光标向左移动一个字符<br>    (4) j 或 向下箭头：光标向下移动一个字符<br>    (5) k 或 向上箭头：光标向上移动一个字符<br>    (6) l 或 向右箭头：光标向右移动一个字符<br>    (7) n<Space>：n表示数字，按下数字后再按空格，光标会向右移动这一行的n个字符<br>    (8) 0 或 功能键[Home]：光标移动到本行开头<br>    (9) $ 或 功能键[End]：光标移动到本行末尾<br>    (10) G：光标移动到最后一行<br>    (11) :n 或 nG：n为数字，光标移动到第n行<br>    (12) gg：光标移动到第一行，相当于1G<br>    (13) n<Enter>：n为数字，光标向下移动n行<br>    (14) /word：向光标之下寻找第一个值为word的字符串。<br>    (15) ?word：向光标之上寻找第一个值为word的字符串。<br>    (16) n：重复前一个查找操作<br>    (17) N：反向重复前一个查找操作<br>    (18) :n1,n2s/word1/word2/g：n1与n2为数字，在第n1行与n2行之间寻找word1这个字符串，并将该字符串替换为word2<br>    (19) :1,$s/word1/word2/g：将全文的word1替换为word2<br>    (20) :1,$s/word1/word2/gc：将全文的word1替换为word2，且在替换前要求用户确认。<br>    (21) v：选中文本<br>    (22) d：删除选中的文本<br>    (23) dd: 删除当前行<br>    (24) y：复制选中的文本<br>    (25) yy: 复制当前行<br>    (26) p: 将复制的数据在光标的下一行/下一个位置粘贴<br>    (27) u：撤销<br>    (28) Ctrl + r：取消撤销<br>    (29) 大于号 &gt;：将选中的文本整体向右缩进一次<br>    (30) 小于号 &lt;：将选中的文本整体向左缩进一次<br>    (31) :w 保存<br>    (32) :w! 强制保存<br>    (33) :q 退出<br>    (34) :q! 强制退出<br>    (35) :wq 保存并退出<br>    (36) :set paste 设置成粘贴模式，取消代码自动缩进<br>    (37) :set nopaste 取消粘贴模式，开启代码自动缩进<br>    (38) :set nu 显示行号<br>    (39) :set nonu 隐藏行号<br>    (40) gg=G：将全文代码格式化<br>    (41) :noh 关闭查找关键词高亮<br>    (42) Ctrl + q：当vim卡死时，可以取消当前正在执行的命令<br>异常处理：<br>    每次用vim编辑文件时，会自动创建一个.filename.swp的临时文件。<br>    如果打开某个文件时，该文件的swp文件已存在，则会报错。此时解决办法有两种：<br>        (1) 找到正在打开该文件的程序，并退出<br>        (2) 直接删掉该swp文件即可</p>
+<h2 id="shell"><a href="#shell" class="headerlink" title="shell"></a>shell</h2><h3 id="概论"><a href="#概论" class="headerlink" title="概论"></a>概论</h3><p>shell是我们通过命令行与操作系统沟通的语言。</p>
+<p>shell脚本可以直接在命令行中执行，也可以将一套逻辑组织成一个文件，方便复用。<br>AC Terminal中的命令行可以看成是一个<strong>“shell脚本在逐行执行”</strong>。</p>
+<p>Linux中常见的shell脚本有很多种，常见的有：</p>
+<ul>
+<li>Bourne Shell(/usr/bin/sh或/bin/sh)</li>
+<li>Bourne Again Shell(/bin/bash)</li>
+<li>C Shell(/usr/bin/csh)</li>
+<li>K Shell(/usr/bin/ksh)</li>
+<li>zsh</li>
+</ul>
+<p>Linux系统中一般默认使用bash，所以接下来讲解bash中的语法。<br>文件开头需要写**#! /bin/bash**，指明bash为脚本解释器。</p>
+<h3 id="示列"><a href="#示列" class="headerlink" title="示列"></a>示列</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">! /bin/bash</span></span><br><span class="line">echo &quot;Hello World!&quot;</span><br></pre></td></tr></table></figure>
+
+<h3 id="运行方式"><a href="#运行方式" class="headerlink" title="运行方式"></a>运行方式</h3><ul>
+<li><p>作为可执行文件</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">acs@9e0ebfcd82d7:~$ chmod +x test.sh  # 使脚本具有可执行权限</span><br><span class="line">acs@9e0ebfcd82d7:~$ ./test.sh  # 当前路径下执行</span><br><span class="line">Hello World!  # 脚本输出</span><br><span class="line">acs@9e0ebfcd82d7:~$ /home/acs/test.sh  # 绝对路径下执行</span><br><span class="line">Hello World!  # 脚本输出</span><br><span class="line">acs@9e0ebfcd82d7:~$ ~/test.sh  # 家目录路径下执行</span><br><span class="line">Hello World!  # 脚本输出</span><br></pre></td></tr></table></figure></li>
+<li><p>用解释器执行</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">acs@9e0ebfcd82d7:~$ bash test.sh</span><br><span class="line">Hello World!  # 脚本输出</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="注释"><a href="#注释" class="headerlink" title="注释"></a>注释</h2><h3 id="单行注释"><a href="#单行注释" class="headerlink" title="单行注释"></a>单行注释</h3><p>每行中**#**之后的内容均是注释。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 这是一行注释</span></span><br><span class="line"></span><br><span class="line">echo &#x27;Hello World&#x27;  #  这也是注释</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="多行注释"><a href="#多行注释" class="headerlink" title="多行注释"></a>多行注释</h3><p>格式：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">:&lt;&lt;EOF</span><br><span class="line">第一行注释</span><br><span class="line">第二行注释</span><br><span class="line">第三行注释</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+
+
+<p>其中<strong>EOF</strong>可以换成其它任意字符串。例如：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">:&lt;&lt;abc</span><br><span class="line">第一行注释</span><br><span class="line">第二行注释</span><br><span class="line">第三行注释</span><br><span class="line">abc</span><br><span class="line"></span><br><span class="line">:&lt;&lt;!</span><br><span class="line">第一行注释</span><br><span class="line">第二行注释</span><br><span class="line">第三行注释</span><br><span class="line">!</span><br></pre></td></tr></table></figure>
+
+<h2 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h2><h3 id="定义变量"><a href="#定义变量" class="headerlink" title="定义变量"></a>定义变量</h3><p>定义变量，不需要加$符号，例如：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">name1=&#x27;mibbp&#x27;  # 单引号定义字符串</span><br><span class="line">name2=&quot;mibpp&quot;  # 双引号定义字符串</span><br><span class="line">name3=mibpp    # 也可以不加引号，同样表示字符串</span><br></pre></td></tr></table></figure>
+
+<h3 id="使用变量"><a href="#使用变量" class="headerlink" title="使用变量"></a>使用变量</h3><p>使用变量，需要加上***$<em><strong>符号，或者</strong></em>${}***符号。花括号是可选的，主要为了帮助解释器识别变量边界。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">name=mibbp</span><br><span class="line">echo $name  # 输出mibbp</span><br><span class="line">echo $&#123;name&#125;  # 输出mibbp</span><br><span class="line">echo $&#123;name&#125;lrt  # 输出mibbplrt</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="只读变量"><a href="#只读变量" class="headerlink" title="只读变量"></a>只读变量</h3><p>使用<em><strong>readonly</strong></em>或者<em><strong>declare</strong></em>可以将变量变为只读。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">name=mibbp</span><br><span class="line">readonly name</span><br><span class="line">declare -r name  # 两种写法均可</span><br><span class="line"></span><br><span class="line">name=abc  # 会报错，因为此时name只读</span><br></pre></td></tr></table></figure>
+
+<h3 id="删除变量"><a href="#删除变量" class="headerlink" title="删除变量"></a>删除变量</h3><p><em><strong>unset</strong></em>可以删除变量</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">name=mibbp</span><br><span class="line">unset name</span><br><span class="line">echo $name  # 输出空行</span><br></pre></td></tr></table></figure>
+
+<h3 id="变量类型"><a href="#变量类型" class="headerlink" title="变量类型"></a>变量类型</h3><ul>
+<li>自定义变量（局部变量）<br>子进程不能访问的变量</li>
+<li>环境变量（全局变量）<br>子进程可以访问的变量</li>
+</ul>
+<p>自定义变量改成环境变量：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">acs@9e0ebfcd82d7:~$ name=mibbp  # 定义变量</span><br><span class="line">acs@9e0ebfcd82d7:~$ export name  # 第一种方法</span><br><span class="line">acs@9e0ebfcd82d7:~$ declare -x name  # 第二种方法</span><br></pre></td></tr></table></figure>
+
+<p>环境变量改为自定义变量：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">acs@9e0ebfcd82d7:~$ export name=mibbp  # 定义环境变量</span><br><span class="line">acs@9e0ebfcd82d7:~$ declare +x name  # 改为自定义变量</span><br></pre></td></tr></table></figure>
+
+<h3 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h3><p>字符串可以用单引号，也可以用双引号，也可以不用引号。</p>
+<p>单引号与双引号的区别：</p>
+<ul>
+<li>单引号中的内容会原样输出，不会执行、不会取变量；</li>
+<li>双引号中的内容可以执行、可以取变量；</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">name=mibbp  # 不用引号</span><br><span class="line">echo &#x27;hello, $name \&quot;hh\&quot;&#x27;  # 单引号字符串，输出 hello, $name \&quot;hh\&quot;</span><br><span class="line">echo &quot;hello, $name \&quot;hh\&quot;&quot;  # 双引号字符串，输出 hello, mibbp &quot;hh&quot;</span><br></pre></td></tr></table></figure>
+
+<p>获取字符串长度</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">name=&quot;mibbp&quot;</span><br><span class="line">echo $&#123;#name&#125;  # 输出3</span><br></pre></td></tr></table></figure>
+
+<p>提取字串</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">name=&quot;hello, mibbp&quot;</span><br><span class="line">echo $&#123;name:0:5&#125;  # 提取从0开始的5个字符</span><br></pre></td></tr></table></figure>
+
+<h2 id="默认变量"><a href="#默认变量" class="headerlink" title="默认变量"></a>默认变量</h2><h3 id="文件参数变量"><a href="#文件参数变量" class="headerlink" title="文件参数变量"></a>文件参数变量</h3><p>在执行shell脚本时，可以向脚本传递参数。**$1<strong>是第一个参数，</strong>$2<strong>是第二个参数，以此类推。特殊的，</strong>$0**是文件名（包含路径）。例如：</p>
+<p>创建文件<strong>test.sh</strong>：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">! /bin/bash</span></span><br><span class="line"></span><br><span class="line">echo &quot;文件名：&quot;$0</span><br><span class="line">echo &quot;第一个参数：&quot;$1</span><br><span class="line">echo &quot;第二个参数：&quot;$2</span><br><span class="line">echo &quot;第三个参数：&quot;$3</span><br><span class="line">echo &quot;第四个参数：&quot;$4</span><br></pre></td></tr></table></figure>
+
+<p>执行该脚本：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">acs@9e0ebfcd82d7:~$ chmod +x test.sh </span><br><span class="line">acs@9e0ebfcd82d7:~$ ./test.sh 1 2 3 4</span><br><span class="line">文件名：./test.sh</span><br><span class="line">第一个参数：1</span><br><span class="line">第二个参数：2</span><br><span class="line">第三个参数：3</span><br><span class="line">第四个参数：4</span><br></pre></td></tr></table></figure>
+
+]]></content>
+  </entry>
 </search>
