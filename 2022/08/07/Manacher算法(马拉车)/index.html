@@ -1,0 +1,338 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Manacher算法 | Mibbp Blog</title><meta name="keywords" content="博客，Mibbp"><meta name="author" content="Mibbp"><meta name="copyright" content="Mibbp"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="马拉车算法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Manacher算法">
+<meta property="og:url" content="https://mibbp.github.io/2022/08/07/Manacher%E7%AE%97%E6%B3%95(%E9%A9%AC%E6%8B%89%E8%BD%A6)/index.html">
+<meta property="og:site_name" content="Mibbp Blog">
+<meta property="og:description" content="马拉车算法">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2021/12/15/TWCjtGJdPcmMeOU.png">
+<meta property="article:published_time" content="2022-08-07T11:38:22.175Z">
+<meta property="article:modified_time" content="2022-08-07T11:38:55.711Z">
+<meta property="article:author" content="Mibbp">
+<meta property="article:tag" content="博客，Mibbp">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2021/12/15/TWCjtGJdPcmMeOU.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://mibbp.github.io/2022/08/07/Manacher%E7%AE%97%E6%B3%95(%E9%A9%AC%E6%8B%89%E8%BD%A6)/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Manacher算法',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-08-07 19:38:55'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const fontSizeVal = saveToLocal.get('global-font-size')
+    if (fontSizeVal !== undefined) {
+      document.documentElement.style.setProperty('--global-font-size', fontSizeVal + 'px')
+    }
+    
+    const detectApple = () => {
+      if (GLOBAL_CONFIG_SITE.isHome && /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    document.addEventListener('pjax:complete', detectApple)})(window)</script><meta name="generator" content="Hexo 5.4.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://s2.loli.net/2021/12/10/FRxm7J2KN94TnM8.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">25</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首頁</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 時間軸</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 標籤</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分類</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down expand hide"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友鏈</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 關於</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 清單</span><i class="fas fa-chevron-down expand hide"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音樂</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 電影</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://s2.loli.net/2021/12/15/TWCjtGJdPcmMeOU.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Mibbp Blog</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首頁</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 時間軸</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 標籤</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分類</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down expand hide"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友鏈</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 關於</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 清單</span><i class="fas fa-chevron-down expand hide"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音樂</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 電影</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Manacher算法</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-08-07T11:38:22.175Z" title="发表于 2022-08-07 19:38:22">2022-08-07</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-08-07T11:38:55.711Z" title="更新于 2022-08-07 19:38:55">2022-08-07</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2.7k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>9分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Manacher算法"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Manacher算法-马拉车"><a href="#Manacher算法-马拉车" class="headerlink" title="Manacher算法(马拉车)"></a>Manacher算法(马拉车)</h1><p>Manacher也是一种字符串算法，是可以查找一个字符串的最长回文子串的线性算法</p>
+<p>先说一下什么回文子串，子串的意思就该字符串中<strong>任意</strong>个连续的字符组成的子序列，对于字符串”abbac”，”abb”就是子串，但是”aba”不是因为不连续，那回文串简单的就是说正着读和反着读都是一样的字符串，那么这俩一结合就是回文子串的意思</p>
+<h2 id="暴力算法"><a href="#暴力算法" class="headerlink" title="暴力算法"></a>暴力算法</h2><p>对于一个问题我想试着去想一下暴力怎么解决，有助于帮助我们理解算法，因为这些算法就是暴力算法的优化版本，暴力做法就很简单，</p>
+<p>我们枚举出每个子串然后暴力判断他是不是回文串，枚举每个子串时间复杂度是O(N<sup>2</sup>)，判断则是O(N)，那暴力的时间复杂度就是O(N<sup>3</sup>)，</p>
+<p>拿这个复杂度很高的，但是这个就太暴力了，有稍微优化一点的就是去枚举中心，然后从中心向外扩展判断回文串，但是因为如果字符串的中心会因为长度奇偶性改变所以要特判一下奇偶性，具体代码就不展示了，大概知道就行，主要看接下来的</p>
+<h3 id="奇数情况"><a href="#奇数情况" class="headerlink" title="奇数情况"></a>奇数情况</h3><p><img src="https://s2.loli.net/2022/08/07/MKuTVsacN15Zw6d.png" alt="image.png"></p>
+<h3 id="偶数情况"><a href="#偶数情况" class="headerlink" title="偶数情况"></a>偶数情况</h3><p><img src="https://s2.loli.net/2022/08/07/9uEbVPv4YIB3krK.png" alt="image.png"></p>
+<h2 id="Manacher算法原理"><a href="#Manacher算法原理" class="headerlink" title="Manacher算法原理"></a>Manacher算法原理</h2><p>对于刚刚优化的暴力算法，因为他需要判断奇偶性很麻烦，所以我们根据原串重新构造，对于一个字符串S”ababababa”，在字符串开头结尾以及每个字符中间插入一个原串没有出现过的相同字符，如下所示：</p>
+<table>
+<thead>
+<tr>
+<th>下标：</th>
+<th>1</th>
+<th>2</th>
+<th>3</th>
+<th>4</th>
+<th>5</th>
+<th>6</th>
+<th>7</th>
+<th>8</th>
+<th>9</th>
+<th>10</th>
+<th>11</th>
+<th>12</th>
+<th>13</th>
+<th>14</th>
+<th>15</th>
+<th>16</th>
+<th>17</th>
+<th>18</th>
+<th>19</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>元素</td>
+<td>#</td>
+<td>a</td>
+<td>#</td>
+<td>b</td>
+<td>#</td>
+<td>a</td>
+<td>#</td>
+<td>b</td>
+<td>#</td>
+<td>a</td>
+<td>#</td>
+<td>b</td>
+<td>#</td>
+<td>a</td>
+<td>#</td>
+<td>b</td>
+<td>#</td>
+<td>a</td>
+<td>#</td>
+</tr>
+</tbody></table>
+<p>这么操作的话，会发先字符串不管是奇数还是偶数构造后都是奇数，并且给每一个回文串都给了一个中心，奇数长度回文串本身就有中心，偶数长度回文串中心其实不存在是空隙(看上图)，但是我们构造会在两个字符之间插入新的字符所以相当于赋予了中心</p>
+<p>优化暴力做法是从中心向外扩展求得以这个字符为中心的回文子串长度，然后就可以找到最长的回文子串，也就是说以每个字符为中心的最长回文子串我们是都可以知道的，但是暴力优化做法每次中心扩展都是一个一个扩展，这样就会很慢，所以Manacher算法就是想我能不能一次多扩展一些不是一个一个来，什么意思呢，比如上面那个字符串s”ababababa”</p>
+<p><img src="https://s2.loli.net/2022/08/07/eyszwQvSXOcp6DT.png" alt="image.png"></p>
+<p>假如我们现在中心枚举到s[12]也就是那条绿色竖线，按照暴力做法我们是一个一个向外扩展，但是我们能否根据已知信息使得我们可以一次多扩展几步呢，当枚举到s[12]中心是，前面所有的中心我们都处理过了，也就是说以s[1,11]字符为中心的最长回文串我们已经求出来，那这些可以给我们提供那些信息呢，我们看以s[8]为中心(不要在意为什么是8不是其他后面会解释)，那因为我们已经求出来以s[8]为中心的最长回文子串，也就是s[1,15]，也就是说区间1=区间2(因为回文，但是注意区间1是从左往右看，区间2是从右往左看)，因为s[12]包含在以s[8]为中心的回文子串中，又因为s[12]在区间2中，所以区间1的s[4]一定等于s[12]，那同样的以s[4]为中心的最长回文子串我们也求出来了，那么既然区间1和区间2相同，那是不是说以s[4]为中心的<strong>最长</strong>回文子串一定也是以s[12]为中心的<strong>回文子串</strong>(假设以s[4]为中心的回文子串没用超出区间1)，所以我们在求以s[12]为中心的回文子串不需要一个一个扩展了，可以直接扩展成s[4]的最长回文子串，然后继续向外扩展，如果s[4]的最长回文子串长度超过区间1，那s[12]的回文子串只能先扩展成在区间1的那一段回文子串。</p>
+<p>Manacher其实就是这个思想，就是根据之前的已知信息推出后面的，利用这些已知的我们就不需要一次一次扩展了，最终达到线性时间复杂度</p>
+<h3 id="回文半径"><a href="#回文半径" class="headerlink" title="回文半径"></a>回文半径</h3><p>那我们刚刚也说了在求以s[i]字符为中心的最长回文半径的时候，以s[1,i-1]这些字符为中心的最长回文子串已经求出来了，所以我们需要把他们存一下，存什么呢也就是回文半径，我们把回文半径存在一个数组Len</p>
+<p>Len[i]的意思就是说，以s[i]字符为中心的最长回文半径长度，回文半径长度就是回文子串长度/2+1，也就是说s[i-Len[i]+1,i+Len[i]-1]是以s[i]为中心的最长回文子串</p>
+<p>并且Len[i]-1就是原串得最床回文子串长度，因为你扩展完的回文串中原串字符数量如果是n，那么’#’数量就是n+1(因为插空，头尾放)，</p>
+<p>扩展后的回文串长度为n+n+1=(Len[i])*2-1=2Len[i]-1，那么n=Len[i]-1</p>
+<h2 id="Manacher流程"><a href="#Manacher流程" class="headerlink" title="Manacher流程"></a>Manacher流程</h2><p>大体Manacher讲了，但是刚刚其实有一个遗留问题，那就为什么处理Len[12]是是去看Len[8] (原理那里举的例子)，明明1到11我们都求出来了为啥非得是8呢</p>
+<p><img src="https://s2.loli.net/2022/08/07/kyv2GXnNrmoVB9i.png" alt="image.png"></p>
+<p>考虑这么一个问题，假如我们要求的是绿色竖线为中心的最长回文子串，其他颜色竖线分别是他们的中心，对应颜色区间就是以他们为中心的回文子串，他们都可以提供信息，那谁提供的最有效呢，是覆盖区间最长的还是左边界最左还是右边界最右呢，结论是最长回文子串右边界最右的哪个能提供最有效的信息，为什么呢，回想我们刚刚那个过程，我们求最长回文子串从中心向外扩展的时候一次一次来太慢了，就希望能多扩展几个，那我如何知道我能扩展多少个呢，是因为要求的中心他被包含在了之前所求的回文子串中，对应到图就是绿色被包含在了区间2和区间3，区间1则没有用，因为只有被包含在回文区间，我们就可以找到与之对应的中心，那对应的中心的最长回文子串长度，也就是我们要求的回文子串长度（但不是最长，不理解就再看看上面哪个原理举得例子，现在是抽象的讲不是很好理解可能），</p>
+<p>所以哪个回文子串提供的信息最多呢，那就是右边界最右的，右边的那些中心的回文子串我们还没求左边的都求了，哪个回文子串包含越多没求的中心，他就能提供更多的信息，所以我们记录一下这个提供最多信息的区间和，它所对应中心</p>
+<p>然后就看代码吧</p>
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><p><a target="_blank" rel="noopener" href="http://www.mangata.ltd/p/6522">Manacher模板题</a></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">long</span> <span class="keyword">long</span> ll;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> N =<span class="number">1e7</span>+<span class="number">1e6</span>+<span class="number">5</span>;</span><br><span class="line"><span class="keyword">char</span> s[N],tmp[N&lt;&lt;<span class="number">1</span>];</span><br><span class="line"><span class="keyword">int</span> Len[N&lt;&lt;<span class="number">1</span>];</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">init</span><span class="params">(<span class="keyword">char</span> *str)</span></span>&#123;<span class="comment">//构造字符串</span></span><br><span class="line">	<span class="keyword">int</span> cou=<span class="number">0</span>,len=<span class="built_in">strlen</span>(str);</span><br><span class="line">	tmp[cou++]=<span class="string">&#x27;$&#x27;</span>;<span class="comment">//最开头插入一个从没出现过的字符，因为这是字符串左尽头这样当你匹配到它的时候一定失败，所以不会出现越界，不					//然每次到0点还要判断一下</span></span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;len;i++)&#123;</span><br><span class="line">		tmp[cou++]=<span class="string">&#x27;#&#x27;</span>;		<span class="comment">//开头和结尾以及每个字符之间都插入一个更其他都不一样的字符，但插入的这个是一样的只是跟其他不一样</span></span><br><span class="line">		tmp[cou++]=str[i];	<span class="comment">//放入原串</span></span><br><span class="line">	&#125;</span><br><span class="line">	tmp[cou++]=<span class="string">&#x27;#&#x27;</span>;</span><br><span class="line">	<span class="comment">//结尾也可以跟头哪个一样插入一个避免越界但是因为字符串其实会自动插入一个&#x27;/0&#x27;所以无所谓</span></span><br><span class="line">	<span class="keyword">return</span> <span class="number">2</span>*len+<span class="number">1</span>;<span class="comment">//返回构造后字符串长度 构造后的字符串大概长这样&quot;$#a#b#a#&quot; </span></span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Manacher</span><span class="params">(<span class="keyword">char</span> *str)</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> len=<span class="built_in">init</span>(str);<span class="comment">//构造字符串</span></span><br><span class="line">	<span class="keyword">int</span> mx=<span class="number">0</span>,p=<span class="number">0</span>,ans=<span class="number">0</span>;<span class="comment">//mx是回文子串覆盖最右的哪个回文子串能覆盖到的最远距离，p就是哪个最远哪个回文子串的中心</span></span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=len;i++)&#123;<span class="comment">//枚举中心</span></span><br><span class="line">		<span class="keyword">if</span>(i&lt;mx)&#123;<span class="comment">//如果当前中心被覆盖了，那么我们就可以根据已知信息，去更新Len[i]，而不是一个一个扩展</span></span><br><span class="line">			Len[i]=<span class="built_in">min</span>(mx-i,Len[<span class="number">2</span>*p-i]);<span class="comment">//看下图</span></span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span>&#123;<span class="comment">//没有覆盖那就只能是1了呗</span></span><br><span class="line">			Len[i]=<span class="number">1</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">while</span>(tmp[i-Len[i]]==tmp[i+Len[i]])&#123;<span class="comment">//因为可能还可以继续扩展所以暴力扩展</span></span><br><span class="line">			Len[i]++;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span>(i+Len[i]&gt;mx)&#123;<span class="comment">//如果以tmp[i]为中心得最长回文子串比之前那个覆盖的还远那就更新</span></span><br><span class="line">			mx=i+Len[i];</span><br><span class="line">			p=i;</span><br><span class="line">		&#125;</span><br><span class="line">		ans=<span class="built_in">max</span>(ans,Len[i]<span class="number">-1</span>);<span class="comment">//更新ans</span></span><br><span class="line">		</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> ans;<span class="comment">//最后ans就是该字符串得最长回文子串长度</span></span><br><span class="line">	</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	</span><br><span class="line">	<span class="built_in">scanf</span>(<span class="string">&quot;%s&quot;</span>,s);</span><br><span class="line">	cout&lt;&lt;<span class="built_in">Manacher</span>(s);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p><img src="https://s2.loli.net/2022/08/07/jmkrDJ9HSbn6MZu.png" alt="image.png"></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Len[i]=<span class="built_in">min</span>(mx-i,Len[<span class="number">2</span>*p-i]);</span><br></pre></td></tr></table></figure>
+
+<p>求得是以s[i]为中心得最长回文子串，mx是前面s[1,i-1]为中心得能覆盖的最远距离，p就是对应得那个中心，所以红色区间就是以p为中心得最长回文子串，且它覆盖距离最远也就是最右，如果s[i]在mx以内那就说明被覆盖，因为回文那么那就能在p得回文子串左半边找打一个与之对应得相同得字符，并且他的最长回文子串也是s[i]得回文子串，那对应的那个中心的下标就是2*p-i，但是可能这个中心得最长回文子串超过了p覆盖的范围，所以取了一下最小值，然后更新Len[i]</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Mibbp</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://mibbp.github.io/2022/08/07/Manacher%E7%AE%97%E6%B3%95(%E9%A9%AC%E6%8B%89%E8%BD%A6)/">https://mibbp.github.io/2022/08/07/Manacher%E7%AE%97%E6%B3%95(%E9%A9%AC%E6%8B%89%E8%BD%A6)/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://mibbp.github.io" target="_blank">Mibbp Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="https://s2.loli.net/2021/12/15/TWCjtGJdPcmMeOU.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2022/08/04/KMP/"><img class="next-cover" src="https://s2.loli.net/2021/12/10/ZeLSyNMJdigquw6.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">KMP算法</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://s2.loli.net/2021/12/10/FRxm7J2KN94TnM8.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Mibbp</div><div class="author-info__description">Mibbp的博客，欢迎访问</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">25</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/mibbp" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:2140078954@qq.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Manacher%E7%AE%97%E6%B3%95-%E9%A9%AC%E6%8B%89%E8%BD%A6"><span class="toc-number">1.</span> <span class="toc-text">Manacher算法(马拉车)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9A%B4%E5%8A%9B%E7%AE%97%E6%B3%95"><span class="toc-number">1.1.</span> <span class="toc-text">暴力算法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A5%87%E6%95%B0%E6%83%85%E5%86%B5"><span class="toc-number">1.1.1.</span> <span class="toc-text">奇数情况</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%81%B6%E6%95%B0%E6%83%85%E5%86%B5"><span class="toc-number">1.1.2.</span> <span class="toc-text">偶数情况</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Manacher%E7%AE%97%E6%B3%95%E5%8E%9F%E7%90%86"><span class="toc-number">1.2.</span> <span class="toc-text">Manacher算法原理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%9E%E6%96%87%E5%8D%8A%E5%BE%84"><span class="toc-number">1.2.1.</span> <span class="toc-text">回文半径</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Manacher%E6%B5%81%E7%A8%8B"><span class="toc-number">1.3.</span> <span class="toc-text">Manacher流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81"><span class="toc-number">1.4.</span> <span class="toc-text">代码</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2022/08/07/Manacher%E7%AE%97%E6%B3%95(%E9%A9%AC%E6%8B%89%E8%BD%A6)/" title="Manacher算法"><img src="https://s2.loli.net/2021/12/15/TWCjtGJdPcmMeOU.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Manacher算法"/></a><div class="content"><a class="title" href="/2022/08/07/Manacher%E7%AE%97%E6%B3%95(%E9%A9%AC%E6%8B%89%E8%BD%A6)/" title="Manacher算法">Manacher算法</a><time datetime="2022-08-07T11:38:22.175Z" title="发表于 2022-08-07 19:38:22">2022-08-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/08/04/KMP/" title="KMP算法"><img src="https://s2.loli.net/2021/12/10/ZeLSyNMJdigquw6.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="KMP算法"/></a><div class="content"><a class="title" href="/2022/08/04/KMP/" title="KMP算法">KMP算法</a><time datetime="2022-08-04T15:49:14.564Z" title="发表于 2022-08-04 23:49:14">2022-08-04</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/07/08/%E8%A7%82%E5%85%89%E5%85%AC%E4%BA%A4/" title="观光公交题解"><img src="https://s2.loli.net/2022/02/26/IpcPZmFQvbEVzta.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="观光公交题解"/></a><div class="content"><a class="title" href="/2022/07/08/%E8%A7%82%E5%85%89%E5%85%AC%E4%BA%A4/" title="观光公交题解">观光公交题解</a><time datetime="2022-07-08T12:46:54.408Z" title="发表于 2022-07-08 20:46:54">2022-07-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/07/07/%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95NOIP%E7%BB%8F%E5%85%B8%E9%97%AE%E9%A2%98/" title="贪心NOIP经典题目"><img src="https://s2.loli.net/2021/12/15/QL4FarDJVZY8nkl.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="贪心NOIP经典题目"/></a><div class="content"><a class="title" href="/2022/07/07/%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95NOIP%E7%BB%8F%E5%85%B8%E9%97%AE%E9%A2%98/" title="贪心NOIP经典题目">贪心NOIP经典题目</a><time datetime="2022-07-07T13:47:02.843Z" title="发表于 2022-07-07 21:47:02">2022-07-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/07/04/cf803D/" title="Codeforces Round"><img src="https://s2.loli.net/2021/12/10/Sjbe6yn92OmUvLc.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Codeforces Round"/></a><div class="content"><a class="title" href="/2022/07/04/cf803D/" title="Codeforces Round">Codeforces Round</a><time datetime="2022-07-04T13:02:06.276Z" title="发表于 2022-07-04 21:02:06">2022-07-04</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://s2.loli.net/2021/12/15/TWCjtGJdPcmMeOU.png')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By Mibbp</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="font-plus" type="button" title="放大字体"><i class="fas fa-plus"></i></button><button id="font-minus" type="button" title="缩小字体"><i class="fas fa-minus"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><div class="js-pjax"></div><div class="aplayer no-destroy" data-id="2099302296" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="true"> </div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/gh/metowolf/MetingJS@1.2/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = [
+  'title',
+  '#config-diff',
+  '#body-wrap',
+  '#rightside-config-hide',
+  '#rightside-config-show',
+  '.js-pjax'
+]
+
+if (false) {
+  pjaxSelectors.unshift('meta[property="og:image"]', 'meta[property="og:title"]', 'meta[property="og:url"]')
+}
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.removeEventListener('scroll', window.tocScrollFn)
+  window.removeEventListener('scroll', scrollCollect)
+
+  typeof preloader === 'object' && preloader.initLoading()
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof chatBtnFn === 'function' && chatBtnFn()
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // Analytics
+  if (false) {
+    MtaH5.pgv()
+  }
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+
+  typeof preloader === 'object' && preloader.endLoading()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
